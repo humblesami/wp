@@ -4270,6 +4270,13 @@ function wp_insert_post( $postarr, $wp_error = false ) {
 	 */
 	do_action( 'wp_insert_post', $post_ID, $post, $update );
 
+    if($post->post_status =='publish' && !isset($post->published_at))
+    {
+        $published_at = date('Y-m-d H:i:s');
+        $status_updates = ['published_at' => $published_at];
+        $wpdb->update( $wpdb->posts, $status_updates, array( 'ID' => $post->ID ));
+    }
+
 	return $post_ID;
 }
 
